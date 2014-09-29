@@ -1,7 +1,7 @@
 <!doctype html>
 <html lang="en">
     <head>
-        <title>rust playpen</title>
+        <title>Scribble</title>
         <meta charset="utf-8"/>
         <link rel="stylesheet" href="//fonts.googleapis.com/css?family=Source+Code+Pro:400,700"/>
         <link rel="stylesheet" href="web.css"/>
@@ -10,30 +10,14 @@
     </head>
     <body>
         <p id="control">
-            <button id="evaluate">evaluate</button>
-            <button id="asm">asm</button>
-            <button id="ir">ir</button>
-            <button id="format">format</button>
-            <button id="share">share</button>
-            <select id="optimize">
-                <option value="0">-O0</option>
-                <option value="1">-O1</option>
-                <option value="2" selected="true">-O2</option>
-                <option value="3">-O3</option>
-            </select>
-            <select id="version">
-                <option>master</option>
-                <option>0.11.0</option>
-                <option>0.10</option>
-            </select>
+            <button id="scribble">Check</button>
+            Protocol:<input type="text" id="proto" />
+            Role:<input type="text" id="role" />
+            <button id="project">Project</button>
+            <button id="graph">Generate Graph</button>
             <select id="sample">
                 <option>hello world</option>
                 <option>for loop</option>
-            </select>
-            <select id="keyboard">
-                <option>Ace</option>
-                <option>Emacs</option>
-                <option>Vim</option>
             </select>
         </p>
         <div id="editor"></div>

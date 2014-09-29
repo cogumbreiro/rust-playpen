@@ -25,16 +25,15 @@ def echo(version, command, arguments, data=None):
                             stdout=subprocess.PIPE,
                             stderr=subprocess.STDOUT)
 
-def bash(version, command, arguments, data=None):
-    return subprocess.Popen(("bash", "-c",
-                            command) + arguments,
+def raw_exec(version, command, arguments, data=None):
+    return subprocess.Popen((command,) + arguments,
                             stdin=subprocess.PIPE,
                             stdout=subprocess.PIPE,
                             stderr=subprocess.STDOUT)
                            
 
 def execute(version, command, arguments, data=None):
-    with bash(version, command, arguments, data) as p:
+    with raw_exec(version, command, arguments, data) as p:
         if data is None:
             out = p.communicate()[0]
         else:

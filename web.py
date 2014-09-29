@@ -62,17 +62,10 @@ def extractor(key, default, valid):
 # before the separator is ignored. Anything after the separator is considered
 # to be the output.
 
-PREFIX = "/usr/local/bin"
 PREFIX = path.join(path.abspath(sys.path[0]), 'bin')
 
-
-EVALUATE = path.join(PREFIX, "evaluate.sh")
-@route("/evaluate.json", method=["POST", "OPTIONS"])
-@enable_post_cors
-@extractor("version", "master", ("master", "0.11.0", "0.10"))
-@extractor("optimize", "2", ("0", "1", "2", "3"))
-def evaluate(optimize, version):
-    out, _ = execute(version, EVALUATE, (optimize,), request.json["code"])
+def simple_exec(version, command, args):
+    out, _ = execute(version, command, args, request.json["code"])
 
     if request.json.get("separate_output") is True:
         split = out.split(b"\xff", 1)
@@ -80,40 +73,32 @@ def evaluate(optimize, version):
         ret = {"rustc": split[0].decode()}
         if len(split) == 2: # compilation succeeded
             ret["program"] = split[1].decode(errors="replace")
-
+        print(ret)
         return ret
     else:
         return {"result": out.replace(b"\xff", b"", 1).decode(errors="replace")}
 
-FORMAT = path.join(PREFIX, "format.sh")
-@route("/format.json", method=["POST", "OPTIONS"])
+SCRIBBLE = path.join(PREFIX, "scribble.sh")
+@route("/scribble.json", method=["POST", "OPTIONS"])
 @enable_post_cors
-@extractor("version", "master", ("master", "0.11.0", "0.10"))
-def format(version):
-    out, rc = execute(version, FORMAT, (), request.json["code"])
-    split = out.split(b"\xff", 1)
-    if rc:
-        return {"error": split[0].decode()}
-    else:
-        return {"result": split[1][:-1].decode()}
+def scribble():
+    return simple_exec('', SCRIBBLE, ())
 
-COMPILE = path.join(PREFIX, "compile.sh")
-@route("/compile.json", method=["POST", "OPTIONS"])
+PROJECT = path.join(PREFIX, "project.sh")
+@route("/project.json", method=["POST", "OPTIONS"])
 @enable_post_cors
-@extractor("version", "master", ("master", "0.11.0", "0.10"))
-@extractor("optimize", "2", ("0", "1", "2", "3"))
-@extractor("emit", "asm", ("asm", "ir"))
-def compile(emit, optimize, version):
-    out, rc = execute(version, COMPILE, (optimize, emit), request.json["code"])
-    split = out.split(b"\xff", 1)
-    if rc:
-        return {"error": split[0].decode()}
-    else:
-        if request.json.get("highlight") is not True:
-            return {"result": split[1].decode()}
-        if emit == "asm":
-            return {"result": highlight(split[1].decode(), GasLexer(), HtmlFormatter(nowrap=True))}
-        return {"result": highlight(split[1].decode(), LlvmLexer(), HtmlFormatter(nowrap=True))}
+def scribble():
+    proto = request.json.get("proto", "")
+    role = request.json.get("role", "")
+    return simple_exec('', PROJECT, (proto, role))
+
+GRAPH = path.join(PREFIX, "graph.sh")
+@route("/graph.json", method=["POST", "OPTIONS"])
+@enable_post_cors
+def scribble():
+    proto = request.json.get("proto", "")
+    role = request.json.get("role", "")
+    return simple_exec('', GRAPH, (proto, role))
 
 os.chdir(sys.path[0])
 run(host='0.0.0.0', port=8080, server='cherrypy')

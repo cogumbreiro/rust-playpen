@@ -34,8 +34,8 @@ function send(path, data, callback) {
     request.send(JSON.stringify(data));
 }
 
-function evaluate(result, code, version, optimize) {
-    send("/evaluate.json", {code: code, version: version, optimize: optimize},
+function simple_exec(result, path, data) {
+    send(path, data,
          function(object) {
           result.textContent = object["result"];
 
@@ -43,29 +43,6 @@ function evaluate(result, code, version, optimize) {
           div.className = "message";
           div.textContent = "Program ended.";
           result.appendChild(div);
-    });
-}
-
-function compile(emit, result, code, version, optimize) {
-    send("/compile.json", {emit: emit, code: code, version: version, optimize: optimize,
-                           highlight: true},
-         function(object) {
-          if ("error" in object) {
-              result.textContent = object["error"];
-          } else {
-              result.innerHTML = object["result"];
-          }
-    });
-}
-
-function format(result, session, version) {
-    send("/format.json", {code: session.getValue(), version: version}, function(object) {
-          if ("error" in object) {
-              result.textContent = object["error"];
-          } else {
-              result.textContent = "";
-              session.setValue(object["result"]);
-          }
     });
 }
 
@@ -138,43 +115,23 @@ function getQueryParameters() {
     return b;
 }
 
-function set_keyboard(editor, mode) {
-    if (mode == "Emacs") {
-        editor.setKeyboardHandler("ace/keyboard/emacs");
-    } else if (mode == "Vim") {
-        editor.setKeyboardHandler("ace/keyboard/vim");
-    } else {
-        editor.setKeyboardHandler(null);
-    }
-}
 
 /*
  * Sets up the interface, by connecting the function handlers above to the
  * controls of the interface.
  */
 addEventListener("DOMContentLoaded", function() {
-    var evaluateButton = document.getElementById("evaluate");
-    var asmButton = document.getElementById("asm");
-    var irButton = document.getElementById("ir");
-    var formatButton = document.getElementById("format");
+    var proto = document.getElementById("proto");
+    var role = document.getElementById("role");
     var shareButton = document.getElementById("share");
     var result = document.getElementById("result");
-    var optimize = document.getElementById("optimize");
-    var version = document.getElementById("version");
     var sample = document.getElementById("sample");
-    var keyboard = document.getElementById("keyboard");
     /* Obtain the editor component */
     var editor = ace.edit("editor");
     var session = editor.getSession();
     /* Configure the editor's look and feel and the syntax it will highlight */
     editor.setTheme("ace/theme/github");
     session.setMode("ace/mode/rust");
-    /* Optional: configure the keyboard's key bindings */
-    var mode = localStorage.getItem("keyboard");
-    if (mode !== null) {
-        set_keyboard(editor, mode);
-        keyboard.value = mode;
-    }
     /* Get any parameters sent by submiting the form (aka the editor's
      * contents) */
     var query = getQueryParameters();
@@ -214,46 +171,25 @@ addEventListener("DOMContentLoaded", function() {
         setSample(sample, session, result, sample.selectedIndex);
     };
     /*
-     * Connect the dropdown with the keyboard layouts to the handler 'set_keyboard'.
-     * Plus, store the selected keyboard layout in the cache of the browser
-     * whenever it is changed.
+     * Connect the button 'scribble' to the handler 'simple_exec'
      */
-    keyboard.onchange = function() {
-        var mode = keyboard.options[keyboard.selectedIndex].value;
-        localStorage.setItem("keyboard", mode);
-        set_keyboard(editor, mode);
-    }
-    /*
-     * Connect the button 'evaluate' to the handler 'evaluate'
-     */
-    evaluateButton.onclick = function() {
-        evaluate(result, session.getValue(), version.options[version.selectedIndex].text,
-                 optimize.options[optimize.selectedIndex].value);
+    document.getElementById("scribble").onclick = function() {
+        simple_exec(result, "/scribble.json", {code:session.getValue()});
     };
     /*
-     * Connect the button 'asm' to the handler 'compile'
+     * Connect the button 'project' to the handler 'simple_exec'
      */
-    asmButton.onclick = function() {
-        compile("asm", result, session.getValue(), version.options[version.selectedIndex].text,
-                 optimize.options[optimize.selectedIndex].value);
+    document.getElementById("project").onclick = function() {
+        simple_exec(result,
+            "/project.json",
+            {code:session.getValue(), proto:proto.value, role:role.value});
     };
     /*
-     * Connect the button 'ir' to the handler 'compile'
+     * Connect the button 'graph' to the handler 'simple_exec'
      */
-    irButton.onclick = function() {
-        compile("ir", result, session.getValue(), version.options[version.selectedIndex].text,
-                 optimize.options[optimize.selectedIndex].value);
-    };
-    /*
-     * Connect the button 'format' to the handler 'format'
-     */
-    formatButton.onclick = function() {
-        format(result, session, version.options[version.selectedIndex].text);
-    };
-    /*
-     * Connect the button 'format' to the handler 'format'
-     */
-    shareButton.onclick = function() {
-        share(result, version.value, session.getValue());
+    document.getElementById("graph").onclick = function() {
+        simple_exec(result,
+            "/graph.json",
+            {code:session.getValue(), proto:proto.value, role:role.value});
     };
 }, false);
