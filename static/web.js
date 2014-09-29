@@ -148,6 +148,10 @@ function set_keyboard(editor, mode) {
     }
 }
 
+/*
+ * Sets up the interface, by connecting the function handlers above to the
+ * controls of the interface.
+ */
 addEventListener("DOMContentLoaded", function() {
     var evaluateButton = document.getElementById("evaluate");
     var asmButton = document.getElementById("asm");
@@ -159,18 +163,20 @@ addEventListener("DOMContentLoaded", function() {
     var version = document.getElementById("version");
     var sample = document.getElementById("sample");
     var keyboard = document.getElementById("keyboard");
+    /* Obtain the editor component */
     var editor = ace.edit("editor");
     var session = editor.getSession();
-
+    /* Configure the editor's look and feel and the syntax it will highlight */
     editor.setTheme("ace/theme/github");
     session.setMode("ace/mode/rust");
-
+    /* Optional: configure the keyboard's key bindings */
     var mode = localStorage.getItem("keyboard");
     if (mode !== null) {
         set_keyboard(editor, mode);
         keyboard.value = mode;
     }
-
+    /* Get any parameters sent by submiting the form (aka the editor's
+     * contents) */
     var query = getQueryParameters();
     if ("code" in query) {
         session.setValue(query["code"]);
@@ -183,49 +189,70 @@ addEventListener("DOMContentLoaded", function() {
             setSample(sample, session, result, index);
         }
     }
-
+    /* the tools can have versions, probe the version supplied by the user
+     * and set it in the UI */
     if ("version" in query) {
         version.value = query["version"];
     }
-
+    /* 
+     * XXX: No idea what this is.
+     */ 
     if (query["run"] === "1") {
         evaluate(result, session.getValue(), version.options[version.selectedIndex].text,
                  optimize.options[optimize.selectedIndex].value);
     }
-
+    /*
+     * Store the code in the editor in the cache of the browser.
+     */
     session.on("change", function() {
         localStorage.setItem("code", session.getValue());
     });
-
+    /*
+     * Connect the dropdown with the examples to the handler 'setSample'
+     */
     sample.onchange = function() {
         setSample(sample, session, result, sample.selectedIndex);
     };
-
+    /*
+     * Connect the dropdown with the keyboard layouts to the handler 'set_keyboard'.
+     * Plus, store the selected keyboard layout in the cache of the browser
+     * whenever it is changed.
+     */
     keyboard.onchange = function() {
         var mode = keyboard.options[keyboard.selectedIndex].value;
         localStorage.setItem("keyboard", mode);
         set_keyboard(editor, mode);
     }
-
+    /*
+     * Connect the button 'evaluate' to the handler 'evaluate'
+     */
     evaluateButton.onclick = function() {
         evaluate(result, session.getValue(), version.options[version.selectedIndex].text,
                  optimize.options[optimize.selectedIndex].value);
     };
-
+    /*
+     * Connect the button 'asm' to the handler 'compile'
+     */
     asmButton.onclick = function() {
         compile("asm", result, session.getValue(), version.options[version.selectedIndex].text,
                  optimize.options[optimize.selectedIndex].value);
     };
-
+    /*
+     * Connect the button 'ir' to the handler 'compile'
+     */
     irButton.onclick = function() {
         compile("ir", result, session.getValue(), version.options[version.selectedIndex].text,
                  optimize.options[optimize.selectedIndex].value);
     };
-
+    /*
+     * Connect the button 'format' to the handler 'format'
+     */
     formatButton.onclick = function() {
         format(result, session, version.options[version.selectedIndex].text);
     };
-
+    /*
+     * Connect the button 'format' to the handler 'format'
+     */
     shareButton.onclick = function() {
         share(result, version.value, session.getValue());
     };
