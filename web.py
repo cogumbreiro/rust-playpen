@@ -4,6 +4,7 @@ import functools
 import os
 import sys
 
+from os import path
 from bottle import get, request, response, route, run, static_file
 from pygments import highlight
 from pygments.formatters import HtmlFormatter
@@ -57,12 +58,21 @@ def extractor(key, default, valid):
         return wrapper
     return decorator
 
+# Programs generate an output that is separated by a 0xFF. Anything
+# before the separator is ignored. Anything after the separator is considered
+# to be the output.
+
+PREFIX = "/usr/local/bin"
+PREFIX = path.join(path.abspath(sys.path[0]), 'bin')
+
+
+EVALUATE = path.join(PREFIX, "evaluate.sh")
 @route("/evaluate.json", method=["POST", "OPTIONS"])
 @enable_post_cors
 @extractor("version", "master", ("master", "0.11.0", "0.10"))
 @extractor("optimize", "2", ("0", "1", "2", "3"))
 def evaluate(optimize, version):
-    out, _ = execute(version, "/usr/local/bin/evaluate.sh", (optimize,), request.json["code"])
+    out, _ = execute(version, EVALUATE, (optimize,), request.json["code"])
 
     if request.json.get("separate_output") is True:
         split = out.split(b"\xff", 1)
@@ -75,24 +85,26 @@ def evaluate(optimize, version):
     else:
         return {"result": out.replace(b"\xff", b"", 1).decode(errors="replace")}
 
+FORMAT = path.join(PREFIX, "format.sh")
 @route("/format.json", method=["POST", "OPTIONS"])
 @enable_post_cors
 @extractor("version", "master", ("master", "0.11.0", "0.10"))
 def format(version):
-    out, rc = execute(version, "/usr/local/bin/format.sh", (), request.json["code"])
+    out, rc = execute(version, FORMAT, (), request.json["code"])
     split = out.split(b"\xff", 1)
     if rc:
         return {"error": split[0].decode()}
     else:
         return {"result": split[1][:-1].decode()}
 
+COMPILE = path.join(PREFIX, "compile.sh")
 @route("/compile.json", method=["POST", "OPTIONS"])
 @enable_post_cors
 @extractor("version", "master", ("master", "0.11.0", "0.10"))
 @extractor("optimize", "2", ("0", "1", "2", "3"))
 @extractor("emit", "asm", ("asm", "ir"))
 def compile(emit, optimize, version):
-    out, rc = execute(version, "/usr/local/bin/compile.sh", (optimize, emit), request.json["code"])
+    out, rc = execute(version, COMPILE, (optimize, emit), request.json["code"])
     split = out.split(b"\xff", 1)
     if rc:
         return {"error": split[0].decode()}
@@ -104,4 +116,4 @@ def compile(emit, optimize, version):
         return {"result": highlight(split[1].decode(), LlvmLexer(), HtmlFormatter(nowrap=True))}
 
 os.chdir(sys.path[0])
-run(host='0.0.0.0', port=80, server='cherrypy')
+run(host='0.0.0.0', port=8080, server='cherrypy')
