@@ -6,9 +6,6 @@ import sys
 
 from os import path
 from bottle import get, request, response, route, run, static_file
-from pygments import highlight
-from pygments.formatters import HtmlFormatter
-from pygments.lexers import GasLexer, LlvmLexer
 
 import playpen
 
@@ -27,6 +24,10 @@ def serve_index():
     response.set_header("X-XSS-Protection", "0")
 
     return response
+
+@get("/<path:path>")
+def serve_static(path):
+    return static_file(path, root="static")
 
 @functools.lru_cache(maxsize=256)
 def execute(command, arguments, code):
@@ -47,7 +48,7 @@ def enable_post_cors(wrappee):
 try:
     SEPI_JAR = path.abspath(sys.argv[1])
 except IndexError:
-    print("Usage: web.py SCRIBBLE_JAR", file=sys.stderr)
+    print("Usage: web.py SEPI_JAR", file=sys.stderr)
     sys.exit(255)
 
 PREFIX = path.join(path.abspath(sys.path[0]), 'bin')
