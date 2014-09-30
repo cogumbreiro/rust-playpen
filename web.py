@@ -45,7 +45,7 @@ def enable_post_cors(wrappee):
     return wrapper
 
 try:
-    SCRIBBLE_JAR = path.abspath(sys.argv[1])
+    SEPI_JAR = path.abspath(sys.argv[1])
 except IndexError:
     print("Usage: web.py SCRIBBLE_JAR", file=sys.stderr)
     sys.exit(255)
@@ -57,39 +57,13 @@ PREFIX = path.join(path.abspath(sys.path[0]), 'bin')
 # to be the output.
 def simple_exec(command, args):
     out, _ = execute(command, args, request.json["code"])
+    return {"result": out.replace(b"\xff", b"", 1).decode(errors="replace")}
 
-    if request.json.get("separate_output") is True:
-        split = out.split(b"\xff", 1)
-
-        ret = {"rustc": split[0].decode()}
-        if len(split) == 2: # compilation succeeded
-            ret["program"] = split[1].decode(errors="replace")
-        print(ret)
-        return ret
-    else:
-        return {"result": out.replace(b"\xff", b"", 1).decode(errors="replace")}
-
-SCRIBBLE = path.join(PREFIX, "scribble.sh")
-@route("/scribble.json", method=["POST", "OPTIONS"])
+RUN = path.join(PREFIX, "run.sh")
+@route("/run.json", method=["POST", "OPTIONS"])
 @enable_post_cors
 def scribble():
-    return simple_exec(SCRIBBLE, (SCRIBBLE_JAR,))
-
-PROJECT = path.join(PREFIX, "project.sh")
-@route("/project.json", method=["POST", "OPTIONS"])
-@enable_post_cors
-def scribble():
-    proto = request.json.get("proto", "")
-    role = request.json.get("role", "")
-    return simple_exec(PROJECT, (SCRIBBLE_JAR, proto, role))
-
-GRAPH = path.join(PREFIX, "graph.sh")
-@route("/graph.json", method=["POST", "OPTIONS"])
-@enable_post_cors
-def scribble():
-    proto = request.json.get("proto", "")
-    role = request.json.get("role", "")
-    return simple_exec(GRAPH, (SCRIBBLE_JAR, proto, role))
+    return simple_exec(RUN, (SEPI_JAR,))
 
 os.chdir(sys.path[0])
 run(host='0.0.0.0', port=8080, server='cherrypy')

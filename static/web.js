@@ -62,8 +62,6 @@ function getQueryParameters() {
  * controls of the interface.
  */
 addEventListener("DOMContentLoaded", function() {
-    var proto = document.getElementById("proto");
-    var role = document.getElementById("role");
     var result = document.getElementById("result");
     /* Obtain the editor component */
     var editor = ace.edit("editor");
@@ -91,23 +89,7 @@ addEventListener("DOMContentLoaded", function() {
     /*
      * Connect the button 'scribble' to the handler 'simpleExec'
      */
-    document.getElementById("scribble").onclick = function() {
-        simpleExec(result, "/scribble.json", {code:session.getValue()});
-    };
-    /*
-     * Connect the button 'project' to the handler 'simpleExec'
-     */
-    document.getElementById("project").onclick = function() {
-        simpleExec(result,
-            "/project.json",
-            {code:session.getValue(), proto:proto.value, role:role.value});
-    };
-    /*
-     * Connect the button 'graph' to the handler 'simpleExec'
-     */
-    document.getElementById("graph").onclick = function() {
-        simpleExec(result,
-            "/graph.json",
-            {code:session.getValue(), proto:proto.value, role:role.value});
+    document.getElementById("run").onclick = function() {
+        simpleExec(result, "/run.json", {code:session.getValue()});
     };
 }, false);
