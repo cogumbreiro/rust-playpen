@@ -2,8 +2,7 @@
 set -o errexit
 out=$(mktemp)
 trap "rm -f $out" EXIT
-JAR=/homes/tsoaresc/Work/scribble-java/scribble.jar
-java -jar "$JAR" - -dot "$1" "$2" > $out
+java -jar "$1" - -dot "$2" "$3" > $out
 printf '\377' # 255 in octal
 cat $out
 

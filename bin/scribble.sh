@@ -1,7 +1,7 @@
 #!/bin/dash
 
 set -o errexit
-java -jar /homes/tsoaresc/Work/scribble-java/scribble.jar -
+java -jar "$1" -
 printf '\377' # 255 in octal
 echo "Protocol is well-formed!"
 
