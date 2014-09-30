@@ -1,7 +1,5 @@
 "use strict";
 
-var samples = 2;
-
 function send(path, data, callback) {
     var result = document.getElementById("result");
 
@@ -46,63 +44,6 @@ function simpleExec(result, path, data) {
     });
 }
 
-function share(result, version, code) {
-    var playurl = "http://play.rust-lang.org?code=" + encodeURIComponent(code);
-    if (version != "master") {
-        playurl += "&version=" + encodeURIComponent(version);
-    }
-    if (playurl.length > 5000) {
-        result.textContent = "resulting URL above character limit for sharing. " +
-            "Length: " + playurl.length + "; Maximum: 5000";
-        return;
-    }
-
-    var url = "http://is.gd/create.php?format=json&url=" + encodeURIComponent(playurl);
-
-    var request = new XMLHttpRequest();
-    request.open("GET", url, true);
-
-    request.onreadystatechange = function() {
-        if (request.readyState == 4) {
-            if (request.status == 200) {
-                setResponse(JSON.parse(request.responseText)['shorturl']);
-            } else {
-                result.textContent = "connection failure";
-            }
-        }
-    }
-
-    request.send();
-
-    function setResponse(shorturl) {
-        while(result.firstChild) {
-            result.removeChild(result.firstChild);
-        }
-
-        var link = document.createElement("a");
-        link.href = link.textContent = shorturl;
-
-        result.textContent = "short url: ";
-        result.appendChild(link);
-    }
-}
-
-function setSample(sample, session, result, index) {
-    var request = new XMLHttpRequest();
-    sample.options[index].selected = true;
-    request.open("GET", "/sample/" + index + ".rs", true);
-    request.onreadystatechange = function() {
-        if (request.readyState == 4) {
-            if (request.status == 200) {
-                session.setValue(request.responseText.slice(0, -1));
-            } else {
-                result.textContent = "connection failure";
-            }
-        }
-    }
-    request.send();
-}
-
 function getQueryParameters() {
     var a = window.location.search.substr(1).split('&');
     if (a == "") return {};
@@ -123,9 +64,7 @@ function getQueryParameters() {
 addEventListener("DOMContentLoaded", function() {
     var proto = document.getElementById("proto");
     var role = document.getElementById("role");
-    var shareButton = document.getElementById("share");
     var result = document.getElementById("result");
-    var sample = document.getElementById("sample");
     /* Obtain the editor component */
     var editor = ace.edit("editor");
     var session = editor.getSession();
@@ -141,22 +80,7 @@ addEventListener("DOMContentLoaded", function() {
         var code = localStorage.getItem("code");
         if (code !== null) {
             session.setValue(code);
-        } else {
-            var index = Math.floor(Math.random() * samples);
-            setSample(sample, session, result, index);
         }
-    }
-    /* the tools can have versions, probe the version supplied by the user
-     * and set it in the UI */
-    if ("version" in query) {
-        version.value = query["version"];
-    }
-    /* 
-     * XXX: No idea what this is.
-     */ 
-    if (query["run"] === "1") {
-        evaluate(result, session.getValue(), version.options[version.selectedIndex].text,
-                 optimize.options[optimize.selectedIndex].value);
     }
     /*
      * Store the code in the editor in the cache of the browser.
@@ -164,12 +88,6 @@ addEventListener("DOMContentLoaded", function() {
     session.on("change", function() {
         localStorage.setItem("code", session.getValue());
     });
-    /*
-     * Connect the dropdown with the examples to the handler 'setSample'
-     */
-    sample.onchange = function() {
-        setSample(sample, session, result, sample.selectedIndex);
-    };
     /*
      * Connect the button 'scribble' to the handler 'simpleExec'
      */
