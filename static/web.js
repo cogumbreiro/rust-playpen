@@ -34,7 +34,7 @@ function send(path, data, callback) {
     request.send(JSON.stringify(data));
 }
 
-function simple_exec(result, path, data) {
+function simpleExec(result, path, data) {
     send(path, data,
          function(object) {
           result.textContent = object["result"];
@@ -171,24 +171,24 @@ addEventListener("DOMContentLoaded", function() {
         setSample(sample, session, result, sample.selectedIndex);
     };
     /*
-     * Connect the button 'scribble' to the handler 'simple_exec'
+     * Connect the button 'scribble' to the handler 'simpleExec'
      */
     document.getElementById("scribble").onclick = function() {
-        simple_exec(result, "/scribble.json", {code:session.getValue()});
+        simpleExec(result, "/scribble.json", {code:session.getValue()});
     };
     /*
-     * Connect the button 'project' to the handler 'simple_exec'
+     * Connect the button 'project' to the handler 'simpleExec'
      */
     document.getElementById("project").onclick = function() {
-        simple_exec(result,
+        simpleExec(result,
             "/project.json",
             {code:session.getValue(), proto:proto.value, role:role.value});
     };
     /*
-     * Connect the button 'graph' to the handler 'simple_exec'
+     * Connect the button 'graph' to the handler 'simpleExec'
      */
     document.getElementById("graph").onclick = function() {
-        simple_exec(result,
+        simpleExec(result,
             "/graph.json",
             {code:session.getValue(), proto:proto.value, role:role.value});
     };
