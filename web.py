@@ -28,6 +28,10 @@ def serve_index():
 
     return response
 
+@get("/<path:path>")
+def serve_static(path):
+    return static_file(path, root="static")
+
 @functools.lru_cache(maxsize=256)
 def execute(command, arguments, code):
     print("running:", command, arguments, file=sys.stderr, flush=True)
