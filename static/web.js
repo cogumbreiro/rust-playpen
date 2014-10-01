@@ -133,6 +133,7 @@ addEventListener("DOMContentLoaded", function() {
     /* Load the available samples from the server */
     send("/samples.json", {},
     function(object) {
+        result.textContent = "";
         if (object["result"].length == 0) {
             sample.remove(0); // remove the "loading" option
             var load_sample = document.createElement("option");
