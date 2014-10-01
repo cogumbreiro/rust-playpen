@@ -82,4 +82,4 @@ def scribble():
     return simple_exec(RUN, (SEPI_JAR,))
 
 os.chdir(sys.path[0])
-run(host='0.0.0.0', port=8080, server='cherrypy')
+run(host='0.0.0.0', port=55001, server='cherrypy')
