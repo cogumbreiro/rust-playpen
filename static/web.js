@@ -148,6 +148,10 @@ addEventListener("DOMContentLoaded", function() {
         load_sample.value = "";
         load_sample.text = "Load a sample";
         sample.add(load_sample, null);
+        load_sample = document.createElement("option");
+        load_sample.value = "";
+        load_sample.text = "";
+        sample.add(load_sample, null);
         // populate with new ones
         for (var i = 0; i < object["result"].length; i++) {
             var file = object["result"][i];
