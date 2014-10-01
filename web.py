@@ -61,17 +61,17 @@ PREFIX = path.join(path.abspath(sys.path[0]), 'bin')
 # to be the output.
 def simple_exec(command, args):
     out, _ = execute(command, args, request.json["code"])
+    return {"result": out.replace(b"\xff", b"", 1).decode(errors="replace")}
 
-    if request.json.get("separate_output") is True:
-        split = out.split(b"\xff", 1)
+def list_files(d):
+    return [f for f in os.listdir(d) if path.isfile(path.join(d, f))]
 
-        ret = {"rustc": split[0].decode()}
-        if len(split) == 2: # compilation succeeded
-            ret["program"] = split[1].decode(errors="replace")
-        print(ret)
-        return ret
-    else:
-        return {"result": out.replace(b"\xff", b"", 1).decode(errors="replace")}
+SAMPLES_DIR = path.join("static", "sample")
+
+@route("/samples.json", method=["POST", "OPTIONS"])
+@enable_post_cors
+def list_samples():
+    return {"result": list_files(SAMPLES_DIR)}
 
 SCRIBBLE = path.join(PREFIX, "scribble.sh")
 @route("/scribble.json", method=["POST", "OPTIONS"])
