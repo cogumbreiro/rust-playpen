@@ -60,6 +60,21 @@ def simple_exec(command, args):
     out, _ = execute(command, args, request.json["code"])
     return {"result": out.replace(b"\xff", b"", 1).decode(errors="replace")}
 
+def is_valid(d, f):
+    return path.isfile(path.join(d, f)) and not f.endswith("~")
+    
+def list_files(d):
+    files = [f for f in os.listdir(d) if is_valid(d, f)]
+    files.sort()
+    return files
+
+SAMPLES_DIR = path.join("static", "sample")
+
+@route("/samples.json", method=["POST", "OPTIONS"])
+@enable_post_cors
+def list_samples():
+    return {"result": list_files(SAMPLES_DIR)}
+
 RUN = path.join(PREFIX, "run.sh")
 @route("/run.json", method=["POST", "OPTIONS"])
 @enable_post_cors

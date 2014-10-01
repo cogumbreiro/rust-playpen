@@ -56,6 +56,26 @@ function getQueryParameters() {
     return b;
 }
 
+function setSample(sample, session, result, index) {
+    var request = new XMLHttpRequest();
+    sample.options[index].selected = true;
+    if (sample.options[index].value == "") {
+        // skip options without a value
+        return;
+    }
+    var file = sample.options[index].value;
+    request.open("GET", "/sample/" + file, true);
+    request.onreadystatechange = function() {
+        if (request.readyState == 4) {
+            if (request.status == 200) {
+                session.setValue(request.responseText.slice(0, -1));
+            } else {
+                result.textContent = "connection failure";
+            }
+        }
+    };
+    request.send();
+}
 
 /*
  * Sets up the interface, by connecting the function handlers above to the
@@ -92,4 +112,40 @@ addEventListener("DOMContentLoaded", function() {
     document.getElementById("run").onclick = function() {
         simpleExec(result, "/run.json", {code:session.getValue()});
     };
+    /* Load the available samples from the server */
+    send("/samples.json", {},
+    function(object) {
+        result.textContent = "";
+        if (object["result"].length == 0) {
+            sample.remove(0); // remove the "loading" option
+            var load_sample = document.createElement("option");
+            load_sample.value = "";
+            load_sample.text = "No samples to load";
+            return;
+        }
+        // there are some samples to load
+        var sample = document.getElementById("sample");
+        sample.remove(0); // remove the "loading" option
+        var load_sample = document.createElement("option");
+        load_sample.value = "";
+        load_sample.text = "Load a sample";
+        sample.add(load_sample, null);
+        load_sample = document.createElement("option");
+        load_sample.value = "";
+        load_sample.text = "";
+        sample.add(load_sample, null);
+        // populate with new ones
+        for (var i = 0; i < object["result"].length; i++) {
+            var file = object["result"][i];
+            var opt = document.createElement("option");
+            opt.value = file;
+            // the displayed text omits the extension
+            opt.text = file.substr(0, file.lastIndexOf('.')); 
+            sample.add(opt, null);
+        }
+        // change the contents of the editor, when changing the 
+        sample.onchange = function() {
+            setSample(sample, session, result, sample.selectedIndex);
+        };
+    });
 }, false);
