@@ -1,0 +1,11 @@
+module examples;
+
+global protocol HelloWorld(role Me, role World) {
+  hello() from Me to World;
+  choice at World {
+    goodMorning() from World to Me;
+  } or {
+    goodAfternoon() from World to Me;
+  }
+}
+
