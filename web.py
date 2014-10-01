@@ -63,8 +63,11 @@ def simple_exec(command, args):
     out, _ = execute(command, args, request.json["code"])
     return {"result": out.replace(b"\xff", b"", 1).decode(errors="replace")}
 
+def is_valid(d, f):
+    return path.isfile(path.join(d, f)) and not f.endswith("~")
+    
 def list_files(d):
-    return [f for f in os.listdir(d) if path.isfile(path.join(d, f))]
+    return [f for f in os.listdir(d) if is_valid(d, f)]
 
 SAMPLES_DIR = path.join("static", "sample")
 
