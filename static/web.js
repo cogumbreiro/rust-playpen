@@ -149,7 +149,8 @@ addEventListener("DOMContentLoaded", function() {
         load_sample.text = "Load a sample";
         sample.add(load_sample, null);
         // populate with new ones
-        for (var file of object["result"]) {
+        for (var i = 0; i < object["result"].length; i++) {
+            var file = object["result"][i];
             var opt = document.createElement("option");
             opt.value = file;
             // the displayed text omits the extension
