@@ -98,4 +98,4 @@ def scribble():
     return simple_exec(GRAPH, (SCRIBBLE_JAR, proto, role))
 
 os.chdir(sys.path[0])
-run(host='0.0.0.0', port=8080, server='cherrypy')
+run(host='0.0.0.0', port=55000, server='cherrypy')
