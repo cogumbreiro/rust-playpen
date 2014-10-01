@@ -6,9 +6,6 @@ import sys
 
 from os import path
 from bottle import get, request, response, route, run, static_file
-from pygments import highlight
-from pygments.formatters import HtmlFormatter
-from pygments.lexers import GasLexer, LlvmLexer
 
 import playpen
 
@@ -67,7 +64,9 @@ def is_valid(d, f):
     return path.isfile(path.join(d, f)) and not f.endswith("~")
     
 def list_files(d):
-    return [f for f in os.listdir(d) if is_valid(d, f)]
+    files = [f for f in os.listdir(d) if is_valid(d, f)]
+    files.sort()
+    return files
 
 SAMPLES_DIR = path.join("static", "sample")
 
