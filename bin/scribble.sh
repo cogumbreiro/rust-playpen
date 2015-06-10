@@ -8,7 +8,6 @@ printf '\377' # 255 in octal
 #echo "Protocol is well-formed!"
 n=$(cat $out | wc -l)
 cat $out
-echo $n
 if [ $n -eq 0 ]
  then 
 	echo "Protocol is well-formed!"
