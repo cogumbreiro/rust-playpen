@@ -108,6 +108,15 @@ addEventListener("DOMContentLoaded", function() {
     session.on("change", function() {
         localStorage.setItem("code", session.getValue());
     });
+ 
+    var projbutt = document.getElementById("project");
+    var modelsel = document.getElementById("modesel");
+    modelsel.onchange = function() { 
+        //document.getElementById("project").disable = false;
+        projbutt.attr('disabled', false);
+        //projbutt.prop('disabled', false);
+    };
+
     /*
      * Connect the button 'scribble' to the handler 'simpleExec'
      */
@@ -131,6 +140,12 @@ addEventListener("DOMContentLoaded", function() {
             "/graph.json",
             {code:session.getValue(), proto:proto.value, role:role.value});
     };
+
+    /*document.getElementById("mode").on("change", function() {
+        document.getElementById("project").disabled =
+				    !document.getElementById("project").disabled;
+    });*/
+
     /* Load the available samples from the server */
     send("/samples.json", {},
     function(object) {
@@ -168,3 +183,4 @@ addEventListener("DOMContentLoaded", function() {
         };
     });
 }, false);
+
