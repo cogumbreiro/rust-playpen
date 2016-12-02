@@ -109,12 +109,16 @@ addEventListener("DOMContentLoaded", function() {
         localStorage.setItem("code", session.getValue());
     });
  
-    var projbutt = document.getElementById("project");
-    var modelsel = document.getElementById("modesel");
-    modelsel.onchange = function() { 
-        //document.getElementById("project").disable = false;
-        projbutt.attr('disabled', false);
-        //projbutt.prop('disabled', false);
+    document.getElementById("modesel").onchange = function() { 
+        var projbutt = document.getElementById("project");
+        //document.getElementById("project").disabled = false;
+        //projbutt.attr('disabled', false);
+        var tmp = projbutt.getAttribute("disabled");
+        if (tmp == 'true') {
+            projbutt.removeAttribute("disabled");
+        } else {
+            projbutt.setAttribute("disabled", 'true');
+        }
     };
 
     /*
@@ -128,6 +132,10 @@ addEventListener("DOMContentLoaded", function() {
      * Connect the button 'project' to the handler 'simpleExec'
      */
     document.getElementById("project").onclick = function() {
+        /*var modesel = document.getElementById("modelsel");
+        var graph = document.getElementById("graph");
+        graph.setAttribute("disabled", 'true');
+        //modesel.disabled = true;*/
         simpleExec(result,
             "/project.json",
             {code:session.getValue(), proto:proto.value, role:role.value});
@@ -140,11 +148,6 @@ addEventListener("DOMContentLoaded", function() {
             "/graph.json",
             {code:session.getValue(), proto:proto.value, role:role.value});
     };
-
-    /*document.getElementById("mode").on("change", function() {
-        document.getElementById("project").disabled =
-				    !document.getElementById("project").disabled;
-    });*/
 
     /* Load the available samples from the server */
     send("/samples.json", {},
