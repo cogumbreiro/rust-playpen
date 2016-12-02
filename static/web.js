@@ -77,6 +77,19 @@ function setSample(sample, session, result, index) {
     request.send();
 }
 
+function toggleProjectGraph(modesel, roleinp, projbutt, graphbutt) {
+    var tmp = modesel.options[modesel.selectedIndex].value;
+    if (tmp == "linmp") {
+        roleinp.setAttribute("disabled", 'true');
+        projbutt.setAttribute("disabled", 'true');
+        graphbutt.setAttribute("disabled", 'true');
+    } else {
+        roleinp.removeAttribute("disabled");
+        projbutt.removeAttribute("disabled");
+        graphbutt.removeAttribute("disabled");
+    }
+}
+
 /*
  * Sets up the interface, by connecting the function handlers above to the
  * controls of the interface.
@@ -102,40 +115,37 @@ addEventListener("DOMContentLoaded", function() {
             session.setValue(code);
         }
     }
+
     /*
      * Store the code in the editor in the cache of the browser.
      */
     session.on("change", function() {
         localStorage.setItem("code", session.getValue());
     });
+
+    var modesel = document.getElementById("modesel");
+    var projbutt = document.getElementById("project");
+    var graphbutt = document.getElementById("graph");
+    var scribpan = document.getElementById("scribble");
+    var sampsel = document.getElementById("sample");
  
-    document.getElementById("modesel").onchange = function() { 
-        var projbutt = document.getElementById("project");
-        //document.getElementById("project").disabled = false;
-        //projbutt.attr('disabled', false);
-        var tmp = projbutt.getAttribute("disabled");
-        if (tmp == 'true') {
-            projbutt.removeAttribute("disabled");
-        } else {
-            projbutt.setAttribute("disabled", 'true');
-        }
+    toggleProjectGraph(modesel, role, projbutt, graphbutt);
+    modesel.onchange = function() { 
+        toggleProjectGraph(modesel, role, projbutt, graphbutt);
     };
+    //*/
 
     /*
      * Connect the button 'scribble' to the handler 'simpleExec'
      */
-    document.getElementById("scribble").onclick = function() {
+    scribpan.onclick = function() {
         //simpleExec(result, "/scribble.json", {code:session.getValue()});
         simpleExec(result, "/scribble.json", {code:session.getValue(), proto:proto.value});
     };
     /*
      * Connect the button 'project' to the handler 'simpleExec'
      */
-    document.getElementById("project").onclick = function() {
-        /*var modesel = document.getElementById("modelsel");
-        var graph = document.getElementById("graph");
-        graph.setAttribute("disabled", 'true');
-        //modesel.disabled = true;*/
+    projbutt.onclick = function() {
         simpleExec(result,
             "/project.json",
             {code:session.getValue(), proto:proto.value, role:role.value});
@@ -143,7 +153,7 @@ addEventListener("DOMContentLoaded", function() {
     /*
      * Connect the button 'graph' to the handler 'simpleExec'
      */
-    document.getElementById("graph").onclick = function() {
+    graphbutt.onclick = function() {
         simpleExec(result,
             "/graph.json",
             {code:session.getValue(), proto:proto.value, role:role.value});
@@ -161,7 +171,6 @@ addEventListener("DOMContentLoaded", function() {
             return;
         }
         // there are some samples to load
-        var sample = document.getElementById("sample");
         sample.remove(0); // remove the "loading" option
         var load_sample = document.createElement("option");
         load_sample.value = "";
