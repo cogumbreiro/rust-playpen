@@ -13,13 +13,13 @@ trap "rm -f $out" EXIT
 #tmp='module tmp;\n'$(cat)
 tmp=$(cat)
 
-echo "$tmp" > /home/scribble-linmp/tmp1.scr
-tail -n +2 /home/scribble-linmp/tmp1.scr > /home/scribble-linmp/tmp2.scr
+echo "$tmp" > /home/scribble/tmp/tmp1.scr
+tail -n +2 /home/scribble/tmp/tmp1.scr > /home/scribble/tmp/tmp2.scr
 
-echo 'module tmp;\n' | cat - /home/scribble-linmp/tmp2.scr > /home/scribble-linmp/tmp3.scr && mv /home/scribble-linmp/tmp3.scr /home/scribble-linmp/tmp.scr
+echo 'module tmp;\n' | cat - /home/scribble/tmp/tmp2.scr > /home/scribble/tmp/tmp3.scr && mv /home/scribble/tmp/tmp3.scr /home/scribble/tmp/tmp.scr
 
-java -classpath /home/scribble-linmp/lib/antlr-runtime-3.2.jar:/home/scribble-linmp/lib/antlr.jar:/home/scribble-linmp/lib/antlr-runtime.jar:/home/scribble-linmp/lib/commons-io.jar:/home/scribble-linmp/lib/scribble-cli.jar:/home/scribble-linmp/lib/scribble-core.jar:/home/scribble-linmp/lib/scribble-parser.jar:/home/scribble-linmp/lib/stringtemplate.jar:/home/scribble-linmp/lib/linmp-scala.jar main.Main /home/scribble-linmp/tmp.scr $2 > $out
-#/home/scribble-linmp/test/Game3.scr
+java -classpath /home/scribble/lib/antlr-runtime-3.2.jar:/home/scribble/lib/antlr.jar:/home/scribble/lib/antlr-runtime.jar:/home/scribble/lib/commons-io.jar:/home/scribble/lib/scribble-cli.jar:/home/scribble/lib/scribble-core.jar:/home/scribble/lib/scribble-parser.jar:/home/scribble/lib/stringtemplate.jar:/home/scribble/lib/linmp-scala.jar main.Main /home/scribble/tmp/tmp.scr $2 > $out
+#/home/scribble/test/Game3.scr
 
 printf '\377' # 255 in octal
 #echo "Protocol is well-formed!"
