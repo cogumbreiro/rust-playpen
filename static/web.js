@@ -126,7 +126,7 @@ addEventListener("DOMContentLoaded", function() {
     var modesel = document.getElementById("modesel");
     var projbutt = document.getElementById("project");
     var graphbutt = document.getElementById("graph");
-    var scribpan = document.getElementById("scribble");
+    var checkbutt = document.getElementById("scribble");
     var sampsel = document.getElementById("sample");
  
     toggleProjectGraph(modesel, role, projbutt, graphbutt);
@@ -137,9 +137,14 @@ addEventListener("DOMContentLoaded", function() {
     /*
      * Connect the button 'scribble' to the handler 'simpleExec'
      */
-    scribpan.onclick = function() {
+    checkbutt.onclick = function() {
         //simpleExec(result, "/scribble.json", {code:session.getValue()});
-        simpleExec(result, "/scribble.json", {code:session.getValue(), proto:proto.value});
+        var tmp = modesel.options[modesel.selectedIndex].value;
+        if (tmp == "linmp") {
+            simpleExec(result, "/scriblinmp.json", {code:session.getValue(), proto:proto.value});
+				} else {
+            simpleExec(result, "/scribble.json", {code:session.getValue(), proto:proto.value});
+				}
     };
     /*
      * Connect the button 'project' to the handler 'simpleExec'

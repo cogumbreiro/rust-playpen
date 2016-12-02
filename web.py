@@ -83,6 +83,14 @@ def scribble():
     proto = request.json.get("proto", "")
     return simple_exec(SCRIBBLE, (SCRIBBLE_JAR, proto))
 
+SCRIBLINMP = path.join(PREFIX, "scrib-linmp.sh")
+@route("/scriblinmp.json", method=["POST", "OPTIONS"])
+@enable_post_cors
+def scribble():
+    #return simple_exec(SCRIBBLE, (SCRIBBLE_JAR,))
+    proto = request.json.get("proto", "")
+    return simple_exec(SCRIBLINMP, (SCRIBBLE_JAR, proto))
+
 PROJECT = path.join(PREFIX, "project.sh")
 @route("/project.json", method=["POST", "OPTIONS"])
 @enable_post_cors
