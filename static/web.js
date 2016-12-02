@@ -133,7 +133,6 @@ addEventListener("DOMContentLoaded", function() {
     modesel.onchange = function() { 
         toggleProjectGraph(modesel, role, projbutt, graphbutt);
     };
-    //*/
 
     /*
      * Connect the button 'scribble' to the handler 'simpleExec'
