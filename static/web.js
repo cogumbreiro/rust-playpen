@@ -112,7 +112,8 @@ addEventListener("DOMContentLoaded", function() {
      * Connect the button 'scribble' to the handler 'simpleExec'
      */
     document.getElementById("scribble").onclick = function() {
-        simpleExec(result, "/scribble.json", {code:session.getValue()});
+        //simpleExec(result, "/scribble.json", {code:session.getValue()});
+        simpleExec(result, "/scribble.json", {code:session.getValue(), proto:proto.value});
     };
     /*
      * Connect the button 'project' to the handler 'simpleExec'

@@ -79,7 +79,9 @@ SCRIBBLE = path.join(PREFIX, "scribble.sh")
 @route("/scribble.json", method=["POST", "OPTIONS"])
 @enable_post_cors
 def scribble():
-    return simple_exec(SCRIBBLE, (SCRIBBLE_JAR,))
+    #return simple_exec(SCRIBBLE, (SCRIBBLE_JAR,))
+    proto = request.json.get("proto", "")
+    return simple_exec(SCRIBBLE, (SCRIBBLE_JAR, proto))
 
 PROJECT = path.join(PREFIX, "project.sh")
 @route("/project.json", method=["POST", "OPTIONS"])
@@ -99,3 +101,4 @@ def scribble():
 
 os.chdir(sys.path[0])
 run(host='0.0.0.0', port=55000, server='cherrypy')
+
