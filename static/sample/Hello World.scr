@@ -1,4 +1,4 @@
-module examples;
+module MyModule;
 
 global protocol HelloWorld(role Me, role World) {
   hello() from Me to World;
