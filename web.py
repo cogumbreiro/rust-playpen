@@ -75,15 +75,14 @@ SAMPLES_DIR = path.join("static", "sample")
 def list_samples():
     return {"result": list_files(SAMPLES_DIR)}
 
-SCRIBBLE = path.join(PREFIX, "scribblec.sh")
-SCRIBLINMP = path.join(PREFIX, "scrib-linmp.sh")
-#@route("/scribble.json", method=["POST", "OPTIONS"])
-@route("/scribblec.json", method=["POST", "OPTIONS"])
+SCRIBBLE = path.join(PREFIX, "scrib-default.sh")
+@route("/scrib-default.json", method=["POST", "OPTIONS"])
 @enable_post_cors
 def scribble():
     return simple_exec(SCRIBBLE, (SCRIBBLE_JAR,))
 
-@route("/scriblinmp.json", method=["POST", "OPTIONS"])
+SCRIBLINMP = path.join(PREFIX, "scrib-linmp.sh")
+@route("/scrib-linmp.json", method=["POST", "OPTIONS"])
 @enable_post_cors
 def scribble():
     #return simple_exec(SCRIBBLE, (SCRIBBLE_JAR,))

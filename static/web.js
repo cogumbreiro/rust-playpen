@@ -141,9 +141,9 @@ addEventListener("DOMContentLoaded", function() {
         //simpleExec(result, "/scribble.json", {code:session.getValue()});
         var tmp = modesel.options[modesel.selectedIndex].value;
         if (tmp == "linmp") {
-            simpleExec(result, "/scriblinmp.json", {code:session.getValue(), proto:proto.value});
+            simpleExec(result, "/scrib-linmp.json", {code:session.getValue(), proto:proto.value});
 				} else {
-            simpleExec(result, "/scribblec.json", {code:session.getValue()});
+            simpleExec(result, "/scrib-default.json", {code:session.getValue()});
 				}
     };
     /*
