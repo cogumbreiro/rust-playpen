@@ -3,4 +3,5 @@ irc.yaml
 root-*
 shorten_key.py
 *~
+*.swp
 
