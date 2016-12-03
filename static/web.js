@@ -143,7 +143,7 @@ addEventListener("DOMContentLoaded", function() {
         if (tmp == "linmp") {
             simpleExec(result, "/scriblinmp.json", {code:session.getValue(), proto:proto.value});
 				} else {
-            simpleExec(result, "/scribble.json", {code:session.getValue(), proto:proto.value});
+            simpleExec(result, "/scribblec.json", {code:session.getValue()});
 				}
     };
     /*
