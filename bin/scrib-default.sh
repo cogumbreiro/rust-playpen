@@ -186,7 +186,7 @@ scribblec() {
   cat $out
   if [ $n -eq 0 ]
    then 
-    echo "Protocol is well-formed!"
+    echo "Module (all protocols) well-formed."
   fi
 }
 
