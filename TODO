@@ -1,0 +1,8 @@
+- Drop scribble.jar path arg from
+
+  /etc/supervisor/conf.d/scribble.conf
+
+- Eliminate scribble.jar param from web.py (and don't pass to .sh scripts)
+
+- Revise .sh scripts, no scribble.jar arg.
+
