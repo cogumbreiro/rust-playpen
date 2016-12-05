@@ -44,7 +44,8 @@ CLASSPATH=$CLASSPATH':'$DIR'/'$LIB'/stringtemplate.jar'
 
 CMD='java -cp '$CLASSPATH' org.scribble.cli.CommandLine'
 
-eval $CMD /home/scribble/tmp/tmp.scr -minlts -nomodnamecheck -fsm "$2" "$3" > $out
+#eval $CMD /home/scribble/tmp/tmp.scr -minlts -nomodnamecheck -fsm "$2" "$3" > $out
+java -cp "$CLASSPATH" org.scribble.cli.CommandLine -inline "$tmp" -fsm "$2" "$3" > $out
 
 printf '\377' # 255 in octal
 n=$(cat $out | wc -l)

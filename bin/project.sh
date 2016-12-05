@@ -26,7 +26,7 @@ out=$(mktemp)
 trap "rm -f out" EXIT
 
 tmp=$(cat)
-echo "$tmp" > /home/scribble/tmp/tmp.scr
+#echo "$tmp" > /home/scribble/tmp/tmp.scr
 
 #CLASSPATH=$DIR'/modules/cli/target/classes/'
 #CLASSPATH=$CLASSPATH':'$DIR'/modules/core/target/classes'
@@ -42,9 +42,10 @@ CLASSPATH=$CLASSPATH':'$DIR'/'$LIB'/scribble-parser.jar'
 CLASSPATH=$CLASSPATH':'$DIR'/'$LIB'/stringtemplate.jar'
 
 
-CMD='java -cp '$CLASSPATH' org.scribble.cli.CommandLine'
+#CMD='java -cp '$CLASSPATH' org.scribble.cli.CommandLine'
 
-eval $CMD /home/scribble/tmp/tmp.scr -nomodnamecheck -project "$2" "$3" > $out
+#eval $CMD /home/scribble/tmp/tmp.scr -nomodnamecheck -project "$2" "$3" > $out
+java -cp "$CLASSPATH" org.scribble.cli.CommandLine '-inline' "$tmp" '-project' "$2" "$3" > $out
 
 printf '\377' # 255 in octal
 n=$(cat $out | wc -l)
