@@ -39,7 +39,7 @@ function simpleExec(result, path, data) {
 
           var div = document.createElement("div");
           div.className = "message";
-          div.textContent = "Program ended.";
+          //div.textContent = "Program ended.";
           result.appendChild(div);
     });
 }
@@ -88,6 +88,19 @@ function toggleProjectGraph(modesel, roleinp, projbutt, graphbutt) {
         projbutt.removeAttribute("disabled");
         graphbutt.removeAttribute("disabled");
     }
+}
+
+function selectText(element) {
+  if (document.selection) {
+    var range = document.body.createTextRange();
+    range.moveToElementText(element);
+    range.select();
+  } else if (window.getSelection) {
+    var range = document.createRange();
+    range.selectNodeContents(element);
+    window.getSelection().removeAllRanges();
+    window.getSelection().addRange(range);
+  }
 }
 
 /*
@@ -142,9 +155,10 @@ addEventListener("DOMContentLoaded", function() {
         var tmp = modesel.options[modesel.selectedIndex].value;
         if (tmp == "linmp") {
             simpleExec(result, "/scrib-linmp.json", {code:session.getValue(), proto:proto.value});
-				} else {
+        } else {
             simpleExec(result, "/scrib-default.json", {code:session.getValue()});
-				}
+        }
+        //selectText("result");
     };
     /*
      * Connect the button 'project' to the handler 'simpleExec'
@@ -198,5 +212,14 @@ addEventListener("DOMContentLoaded", function() {
             setSample(sample, session, result, sample.selectedIndex);
         };
     });
+
+    var seloutbutt = document.getElementById("seloutput");
+    seloutbutt.onclick = function() {
+        selectText(result);
+    };
+    var seloutbutt2 = document.getElementById("seloutput2");
+    seloutbutt2.onclick = function() {
+        selectText(result);
+    };
 }, false);
 
