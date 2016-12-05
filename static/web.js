@@ -90,17 +90,28 @@ function toggleProjectGraph(modesel, roleinp, projbutt, graphbutt) {
     }
 }
 
+function checkProto(modesel, session, proto) {
+    //simpleExec(result, "/scribble.json", {code:session.getValue()});
+    var tmp = modesel.options[modesel.selectedIndex].value;
+    if (tmp == "linmp") {
+        simpleExec(result, "/scrib-linmp.json", {code:session.getValue(), proto:proto.value});
+    } else {
+        simpleExec(result, "/scrib-default.json", {code:session.getValue()});
+    }
+    //selectText("result");
+}
+
 function selectText(element) {
-  if (document.selection) {
-    var range = document.body.createTextRange();
-    range.moveToElementText(element);
-    range.select();
-  } else if (window.getSelection) {
-    var range = document.createRange();
-    range.selectNodeContents(element);
-    window.getSelection().removeAllRanges();
-    window.getSelection().addRange(range);
-  }
+    if (document.selection) {
+        var range = document.body.createTextRange();
+        range.moveToElementText(element);
+        range.select();
+    } else if (window.getSelection) {
+        var range = document.createRange();
+        range.selectNodeContents(element);
+        window.getSelection().removeAllRanges();
+        window.getSelection().addRange(range);
+    }
 }
 
 /*
@@ -151,14 +162,7 @@ addEventListener("DOMContentLoaded", function() {
      * Connect the button 'scribble' to the handler 'simpleExec'
      */
     checkbutt.onclick = function() {
-        //simpleExec(result, "/scribble.json", {code:session.getValue()});
-        var tmp = modesel.options[modesel.selectedIndex].value;
-        if (tmp == "linmp") {
-            simpleExec(result, "/scrib-linmp.json", {code:session.getValue(), proto:proto.value});
-        } else {
-            simpleExec(result, "/scrib-default.json", {code:session.getValue()});
-        }
-        //selectText("result");
+        checkProto(modesel, session, proto);
     };
     /*
      * Connect the button 'project' to the handler 'simpleExec'
@@ -221,5 +225,11 @@ addEventListener("DOMContentLoaded", function() {
     seloutbutt2.onclick = function() {
         selectText(result);
     };
+
+    proto.onkeypress = function(e) {
+        if (e.keyCode == 13) {  // Enter
+            checkProto(modesel, session, proto);
+        }
+    }
 }, false);
 
