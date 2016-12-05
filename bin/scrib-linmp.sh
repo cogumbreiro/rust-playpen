@@ -3,7 +3,6 @@
 set -o errexit
 out=$(mktemp)
 trap "rm -f $out" EXIT
-#java -jar "$1" - > $out
 
 #tmp=''
 #while read line
@@ -20,10 +19,24 @@ tmp=$(cat)
 
 #echo "$tmp" > /home/scribble/tmp/tmp.scr
 
-CLASSPATH='/home/scribble/lib/antlr-runtime-3.2.jar:/home/scribble/lib/antlr.jar:/home/scribble/lib/antlr-runtime.jar:/home/scribble/lib/commons-io.jar:/home/scribble/lib/scribble-cli.jar:/home/scribble/lib/scribble-core.jar:/home/scribble/lib/scribble-parser.jar:/home/scribble/lib/stringtemplate.jar:/home/scribble/lib/linmp-scala.jar'
+DIR='/home/scribble'
+LIB='lib'
+#CLASSPATH=$DIR'/modules/cli/target/classes/'
+#CLASSPATH=$CLASSPATH':'$DIR'/modules/core/target/classes'
+#CLASSPATH=$CLASSPATH':'$DIR'/modules/parser/target/classes'
+#CLASSPATH=$CLASSPATH':'$ANTLR
+#CLASSPATH=$CLASSPATH':'$DIR'/'$LIB'/antlr.jar'
+CLASSPATH=$DIR'/'$LIB'/antlr.jar'
+CLASSPATH=$CLASSPATH':'$DIR'/'$LIB'/antlr-runtime.jar'
+CLASSPATH=$CLASSPATH':'$DIR'/'$LIB'/commons-io.jar'
+CLASSPATH=$CLASSPATH':'$DIR'/'$LIB'/scribble-cli.jar'
+CLASSPATH=$CLASSPATH':'$DIR'/'$LIB'/scribble-core.jar'
+CLASSPATH=$CLASSPATH':'$DIR'/'$LIB'/scribble-parser.jar'
+CLASSPATH=$CLASSPATH':'$DIR'/'$LIB'/stringtemplate.jar'
+CLASSPATH=$CLASSPATH':'$DIR'/'$LIB'/linmp-scala.jar'
 
 #java -cp "$CLASSPATH" main.Main /home/scribble/tmp/tmp.scr $2 > $out
-java -cp "$CLASSPATH" main.Main '-inline' "$tmp" "$2" > $out
+java -cp "$CLASSPATH" main.Main -inline "$tmp" "$2" > $out
 
 printf '\377' # 255 in octal
 #echo "Protocol is well-formed!"

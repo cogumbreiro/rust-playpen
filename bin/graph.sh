@@ -8,26 +8,14 @@
 #printf '\377' # 255 in octal
 #cat $out
 
-
-# Directory containing Scribble jars
-LIB=lib
-
-# antlr 3.2 location (if no lib jar)
-ANTLR=
-  # e.g. '/cygdrive/c/Users/[User]/.m2/repository/org/antlr/antlr-runtime/3.2/antlr-runtime-3.2.jar'
-
-PRG=`basename "$0"`
-#DIR=`dirname "$0"`   # Non Cygwin..
-DIR="/home/scribble"
-#BASEDIR=$(dirname $0)
-
 set -o errexit
 out=$(mktemp)
 trap "rm -f out" EXIT
 
 tmp=$(cat)
-echo "$tmp" > /home/scribble/tmp/tmp.scr
 
+DIR='/home/scribble'
+LIB='lib'
 #CLASSPATH=$DIR'/modules/cli/target/classes/'
 #CLASSPATH=$CLASSPATH':'$DIR'/modules/core/target/classes'
 #CLASSPATH=$CLASSPATH':'$DIR'/modules/parser/target/classes'
@@ -42,9 +30,9 @@ CLASSPATH=$CLASSPATH':'$DIR'/'$LIB'/scribble-parser.jar'
 CLASSPATH=$CLASSPATH':'$DIR'/'$LIB'/stringtemplate.jar'
 
 
-CMD='java -cp '$CLASSPATH' org.scribble.cli.CommandLine'
-
+#CMD='java -cp '$CLASSPATH' org.scribble.cli.CommandLine'
 #eval $CMD /home/scribble/tmp/tmp.scr -minlts -nomodnamecheck -fsm "$2" "$3" > $out
+
 java -cp "$CLASSPATH" org.scribble.cli.CommandLine -inline "$tmp" -fsm "$2" "$3" > $out
 
 printf '\377' # 255 in octal
