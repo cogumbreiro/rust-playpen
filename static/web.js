@@ -127,7 +127,11 @@ addEventListener("DOMContentLoaded", function() {
     var session = editor.getSession();
     /* Configure the editor's look and feel and the syntax it will highlight */
     editor.setTheme("ace/theme/github");
-    session.setMode("ace/mode/rust");
+
+    session.setMode("ace/mode/java");
+		//var ScribMode.require("/home/scribble/www-scribble/static/mode-scribble").Mode;
+		//session.setMode(new ScribMode());*/
+
     /* Get any parameters sent by submiting the form (aka the editor's
      * contents) */
     var query = getQueryParameters();
