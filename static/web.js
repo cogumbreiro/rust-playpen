@@ -196,7 +196,7 @@ addEventListener("DOMContentLoaded", function() {
         sample.remove(0); // remove the "loading" option
         var load_sample = document.createElement("option");
         load_sample.value = "";
-        load_sample.text = "Load a sample";
+        load_sample.text = "Load a sample...";
         sample.add(load_sample, null);
         load_sample = document.createElement("option");
         load_sample.value = "";
