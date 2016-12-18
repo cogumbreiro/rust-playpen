@@ -811,7 +811,7 @@ var ScribbleHighlightRules = function() {
 
 
     var langClasses = (
-        "AbstractMethodError|AssertionError|ClassCircularityError|"+
+        /*"AbstractMethodError|AssertionError|ClassCircularityError|"+
         "ClassFormatError|Deprecated|EnumConstantNotPresentException|"+
         "ExceptionInInitializerError|IllegalAccessError|"+
         "IllegalThreadStateException|InstantiationError|InternalError|"+
@@ -834,7 +834,8 @@ var ScribbleHighlightRules = function() {
         "ArrayStoreException|ClassCastException|LinkageError|"+
         "NoClassDefFoundError|ClassNotFoundException|RuntimeException|"+
         "Exception|ThreadDeath|Error|Throwable|System|ClassLoader|"+
-        "Cloneable|Class|CharSequence|Comparable|String|Object"
+        "Cloneable|Class|CharSequence|Comparable|String|Object"*/
+				""
     );
 
     var keywordMapper = this.createKeywordMapper({
