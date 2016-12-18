@@ -803,7 +803,7 @@ var ScribbleHighlightRules = function() {
     "char|final|interface|static|void|" +
     "class|finally|long|strictfp|volatile|" +
     "const|float|native|super|while"*/
-    "module|global|local|protocol|role|from|to|choice|or|at|rec|continue|do|" +
+    "module|type|global|local|protocol|role|from|to|choice|or|at|rec|continue|do|" +
     "explicit|aux|connect|disconnect|accept"
     );
 

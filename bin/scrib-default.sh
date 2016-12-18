@@ -29,5 +29,5 @@ n=$(cat $out | wc -l)
 cat $out
 if [ $n -eq 0 ]
 then 
-  echo "Module (all protocols) well-formed."
+  echo "Module (all protocols) OK."
 fi
